@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - /volume1/docker/homepage:/app/config # Make sure your local config directory exists
+      - /volume1/docker/homepage:/app/public/icons # Make sure your local config directory exists
+    environment:
+      PUID: 1026
+      PGID: 100
