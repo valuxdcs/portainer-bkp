@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ee:<version>-ee.0
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.valux-stc.synology.me'
+    environment:
+      PUID: 1026
+      PGID: 100
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://gitlab.example.com'
+        environment:
+
+    ports:
+      - '80:80'
+      - '443:443'
+      - '22:22'
+    volumes:
+      - 'volume1/docker/gitlab/config:/etc/gitlab'
+      - 'volume1/docker/gitlab/logs:/var/log/gitlab'
+      - 'volume1/docker/gitlab/data:/var/opt/gitlab'
+    shm_size: '256m'
