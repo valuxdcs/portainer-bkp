@@ -8,19 +8,19 @@ services:
     cpu_shares: 768
     security_opt:
       - no-new-privileges:true
-    user: 1026:100
+    user: 0:0
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "wikijs", "-U", "wikiuser"]
       timeout: 45s
       interval: 10s
       retries: 10
     volumes:
-      - /volume1/docker/wikijs/db:/var/lib/postgresql/data:rw
+      - /opt/wikijs/db:/var/lib/postgresql/data:rw
     environment:
       POSTGRES_DB: wikijs
       POSTGRES_USER: wikiuser
       POSTGRES_PASSWORD: wikipass
-    restart: on-failure:5
+    restart: unless-stopped
 
   wiki:
     image: ghcr.io/linuxserver/wikijs:latest
@@ -35,19 +35,20 @@ services:
     ports:
       - 3540:3000
     volumes:
-      - /volume1/docker/wikijs/config:/config:rw
-      - /volume1/docker/wikijs/data:/data:rw
+      - /opt/wikijs/config:/config:rw
+      - /opt/wikijs/data:/data:rw
+      - /opt/wikijs/assets/favicons:/assets/favicons:rw
     environment:
-      TZ: Europe/Bucharest
-      PUID: 1026
-      PGID: 100
+      TZ: Europe/Paris
+      PUID: 0
+      PGID: 0
       DB_TYPE: postgres
       DB_HOST: wiki-js-db
       DB_PORT: 5432
       DB_NAME: wikijs
       DB_USER: wikiuser
       DB_PASS: wikipass
-    restart: on-failure:5
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
